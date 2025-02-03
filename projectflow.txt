@@ -153,7 +153,69 @@
 34. You can also do model training on /training route
 
 
+-----------------------------------------------------------------------------------------------------------------------------
+Reboot EC2 Instance
 
+interupt Linux command (ctrl+c) --> close tab --> EC2 --> Instances --> Instance state --> Reboot instance --> click on Reboot 
+
+> Then self-hosted runner will go offline
+
+How to again Restart EC2 Instance
+
+>> Go to instance >> click on "Connect" >> Connect using EC2 Instance Connect 
+>> Connect (Terminal will be launched) 
+
+
+It seems that the self-hosted runner stopped because it's designed to run in the foreground of the terminal when executed with `./run.sh`. This means that if you closed the terminal session or the EC2 instance restarted, the runner would have stopped. To ensure it runs persistently in the background and starts automatically, you should set it up as a service.
+
+Here’s how to do that on your EC2 instance:
+
+### 1. Navigate to the Runner Directory
+
+First, make sure you’re in the `actions-runner` directory on your EC2 instance:
+
+```bash
+cd ~/actions-runner
+```
+
+### 2. Set Up the Runner as a Service
+
+To run the self-hosted GitHub runner as a background service, GitHub provides a built-in script to install it as a service.
+
+Run the following command in the `actions-runner` directory:
+
+```bash
+sudo ./svc.sh install
+```
+
+This command will install the runner as a service, making it easier to start, stop, or restart it.
+
+### 3. Start the Service
+
+After installing the service, start it using the following command:
+
+```bash
+sudo ./svc.sh start
+```
+
+### 4. Check the Status
+
+You can check the status of the runner service to ensure it’s running:
+
+```bash
+sudo ./svc.sh status
+```
+
+### 5. Enable the Service to Start on Boot (Optional)
+
+To ensure that the runner service starts automatically when the EC2 instance reboots, you can use the following command:
+
+```bash
+sudo systemctl enable actions.runner.<your-runner-name>.service
+```
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
